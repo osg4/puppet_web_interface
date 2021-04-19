@@ -1,7 +1,7 @@
 #!/bin/bash
 
-su - Usuario <<EOF
-contraseña
+su - usuario <<EOF
+password
 cd /var/www/proyecto/
 pdk new module $1 --skip-interview
 EOF

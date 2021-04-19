@@ -1,7 +1,7 @@
 #!/bin/bash
 
 su - Usuario <<EOF
-contraseña
-cd /var/www/proyecto/prueba8
-pdk new class $1
+password
+cd /var/www/proyecto/$1/manifests/
+pdk new class $2
 EOF

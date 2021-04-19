@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
-	<link rel="stylesheet" type="text/css" href="css/estilo.css">
+	<link rel="stylesheet" type="text/css" href="">
 </head>
 <body>
 
@@ -22,26 +22,8 @@
 			?>			
 		</div>
 
-		<div class="item2">
-			<h2>Creacion Modulo</h2>
-
-			<form action="" method="POST">
-				<input type="text" name="nombre_modulo">
-				<br>
-				<input type="submit">
-			</form>	
-
-			<?php
-				$nombre_modulo = $_POST['nombre_modulo']; 
-				exec("./creacion_modulo.sh '$nombre_modulo'");
-			?>
-		</div>
-
 		<div class="item3">
 			<h2>Creacion Clase</h2>
-
-			<p>Elige el modulo para crear sus clases:</p>
-
 
 			<p>Ponga un nombre a la clase:</p>
 
@@ -81,10 +63,102 @@
 		</div>
 
 		<div class="item5">
-			<h2>Prueba script bash</h2>
+			<h2>Prueba loop insercion datos desde un Array</h2>
 
-			<p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Similique veniam, autem. Unde soluta tenetur necessitatibus totam consequatur ea iure fuga reprehenderit, amet quaerat reiciendis itaque dicta doloremque ullam at, culpa.</p>
+			<?php 
+				$nombres = array("Pepe", "Jose", "David");
+				$salida2 = "";
+				$fichero2 = "prueba4.pp";
+				foreach ($nombres as $nombre) {
+					$salida2 .= "user { '$nombre':\n\tensure => 'present',\n},\n";
+					print_r($salida2);					
+				}
+				file_put_contents($fichero2, $salida2, FILE_APPEND);
+			?>
+			
 		</div>
+
+		<div>
+			<h2>Prueba loop Form</h2>
+
+			<?php 
+				$coches = array("bmw", "volkswagen", "fiat", "skoda"); 
+			?>
+									
+			<form action="" method="POST">
+				<select name="cars">
+					<?php 
+						foreach ($coches as $opciones) {
+						echo "<option value='$opciones'>$opciones</option>";
+						};
+					?>
+				</select>
+
+			</form>
+			
+		</div>
+		<hr>
+		<div>
+			<h1>Integracion Total:</h1>
+
+			<?php 
+				$enlace = mysqli_connect("localhost", "Usuario", "password", "dashboard");	
+			?>
+
+			<p>Integracion de los foreach y escritura a arrays para usarlo con los modulos y las clases.</p>
+			
+			<h2>Creacion Modulo</h2>
+
+			<form action="" method="POST">
+				<input type="text" name="nombre_modulo">
+				<br>
+				<input type="submit">
+			</form>	
+
+			<?php
+				$nombre_modulo = $_POST['nombre_modulo']; 
+				exec("./creacion_modulo.sh '$nombre_modulo'");
+
+				$sql_insercion_modulo = "insert into modulos (nombre) values ('$nombre_modulo');";
+				if (mysqli_query($enlace, $sql_insercion_modulo)) {
+					echo 'Insercion correcta en la Base de Datos';
+				} else {
+					echo 'Error: ' . $sql_insercion_modulo . "<br>" . mysqli_error($enlace);
+				}
+			?>
+
+			<h2>Elegir Modulo y Clase Para Edicion</h2>
+
+			<?php 
+				
+				$sql_nombre_modulo = "select nombre from modulos;";
+				$resultado_modulo = mysqli_query($enlace, $sql_nombre_modulo);
+			?>
+
+			<form action="" method="POST">
+				<p>Elegir Modulo</p>
+				<select name="modulo">
+					<?php 
+						while ($array_nombre = mysqli_fetch_array($resultado_modulo, MYSQLI_ASSOC)) {
+							foreach ($array_nombre as $nombre => $valor) {
+								echo "<option value='$valor'>$valor</option>";
+								echo '<br>';
+							}							
+						};
+					?>					
+				</select>
+				<br>
+				<p>Elegir clase a modificar:</p>
+				<select name="clase">
+					<option value="2">Clase 1</option>
+				</select>
+				<br>
+				<textarea name="" id="" cols="30" rows="10"></textarea>
+			</form>
+
+ 	
+		</div>
+
 	</div>
 
 </body>
