@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <div id="texto">
+        <h1>Ejemplo con PHP y AJAX</h1>
+           <button id="cambiaContenido" onclick="cambiaContenido()">Ejecutar</button>
+    </div>
+    <div>
+        <p>Este texto no va a cambiar ya que esta en otro div</p>
+    </div>
+
+    <script>
+        function cambiaContenido() {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("texto").innerHTML = this.responseText;
+                }
+            };
+            
+            xhr.open("GET", "PHPprueba.php", true);
+            xhr.send();
+        }
+    </script>
+
+</body>
+
+</html>
